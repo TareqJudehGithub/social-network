@@ -26,9 +26,9 @@ const signin = async (req, res) => {
      try {
           // find user based on email:
           let user = await User.findOne({email: email});
-          // if err or no user 
+          // if user does not exist: 
           if(!user ) {
-               return res.status(401).json({ msg: "Error! User is not exist."});
+               return res.status(401).json({ msg: "Error! User does not exist."});
           }
      
      // email and password must match:
@@ -40,7 +40,9 @@ const signin = async (req, res) => {
      // if user exists, then athenticate:
 
      // generate a token with user ID and secret
-     const { _id, name } = user
+     const { _id, name } = user;
+
+     // sign with both user id and token:
      const token = jwt.sign(
           { _id: _id}, 
           process.env.JWT_SECRET
@@ -101,6 +103,7 @@ const signOut = async(req, res) => {
      await res.clearCookie("token");
      res.json({ msg: "Signout was successful!"});
 }
+
 
 module.exports = {
      signup,

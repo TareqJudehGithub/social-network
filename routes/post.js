@@ -1,5 +1,6 @@
 const { getPosts, createPost } = require("../controllers/post");
 const { postValidator } = require("../validator/index");
+const { midAuth} = require("../middleware/auth");
 
 const express = require("express");
 const router = express.Router();
@@ -7,7 +8,7 @@ const router = express.Router();
 
 // routes
 
-router.get("/", getPosts);
+router.get("/", midAuth, getPosts);
 
 router.post("/", postValidator, createPost);
 
