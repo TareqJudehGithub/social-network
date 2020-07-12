@@ -43,7 +43,7 @@ const userValidator = [
      check("password", "Password must contain at least one number.")
           .matches(/\d/).bail(),
           check("password", "Password must contain at least one symbol.")
-          .matches(/[!@#$%&*()-/:-?{}-~!"^_`"]/).bail()
+          .matches(/[!@#$%&*()-/:-?{-~!"^_`\[\]]/).bail()
 ] 
  
 module.exports = {

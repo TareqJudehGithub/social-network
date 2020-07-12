@@ -47,6 +47,12 @@ userSchema.virtual("password")
 
      // methods
      userSchema.methods = {
+          // user authentication:  email and plain password match password
+          authenticate: function(plainText) {
+               return this.encryptPassword(plainText) === this.hashed_password
+          },
+
+          // password encyprtion:
           encryptPassword: function(password) {
                if(!password) return "";
                try {
