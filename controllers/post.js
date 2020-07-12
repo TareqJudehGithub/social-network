@@ -1,6 +1,6 @@
 const Post = require("../models/post");
 const { validationResult } = require("express-validator");
-const { find } = require("../models/post");
+
 
 const getPosts = async (req, res) => {
 
@@ -10,7 +10,8 @@ const getPosts = async (req, res) => {
           .select("_id title body");
     try {
          res.json({ posts });
-    } catch (error) {
+    } 
+    catch (error) {
          console.log(error.message);
          res.status(500).json({ msg: error })
     }
