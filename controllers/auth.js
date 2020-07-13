@@ -104,7 +104,6 @@ const signOut = async(req, res) => {
      res.json({ msg: "Signout was successful!"});
 }
 
-
 module.exports = {
      signup,
      getUsers,

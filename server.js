@@ -14,10 +14,17 @@ const authRoutes = require("./routes/auth");
 const cookieParser = require("cookie-parser");
 
 // middleware
-app.use(morgan("dev"));
 app.use("/api/posts", postRoutes);
 app.use("/api/users", authRoutes);
+app.use(morgan("dev"));
 app.use(cookieParser())
+
+     // express-jwt custom unautherized error msg:
+app.use(function (err, req, res, next) {
+     if (err.name === 'UnauthorizedError') {
+       res.status(401).send('This action is not authorized.');
+     }
+   });
 
 const PORT = process.env.PORT || 8080; //if PORT in .env is not available, then use 8080
 
