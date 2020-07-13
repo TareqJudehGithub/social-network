@@ -6,18 +6,6 @@ const User = require("../models/user");
 
 dotenv.config();
 
-const getUsers = async (req, res) => {
-   
-     try {
-          const users = await User
-               .find()
-               .select("id name email created");
-               
-          res.json({ users });
-     } catch (error) {
-          res.status(500).json({ msg: error});
-     }
-};
 
 const signin = async (req, res) => {
 
@@ -106,7 +94,6 @@ const signOut = async(req, res) => {
 
 module.exports = {
      signup,
-     getUsers,
      signin,
      signOut
 };

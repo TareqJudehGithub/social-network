@@ -11,11 +11,13 @@ connectDB();
 // routes
 const postRoutes = require("./routes/post");
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user");
 const cookieParser = require("cookie-parser");
 
 // middleware
 app.use("/api/posts", postRoutes);
-app.use("/api/users", authRoutes);
+app.use("/api/", authRoutes);
+app.use("/api/users", userRoutes);
 app.use(morgan("dev"));
 app.use(cookieParser())
 

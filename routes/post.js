@@ -13,6 +13,6 @@ router.get("/", getPosts);
 router.post("/", midAuth, postValidator, createPost);
 
 // Any route containing :userId, our app will first execute userById() 
-router.param(userById);
+router.param("userId", userById);
 
 module.exports= router;

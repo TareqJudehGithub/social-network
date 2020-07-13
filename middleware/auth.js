@@ -1,5 +1,7 @@
 const expressJwt = require("express-jwt");
+const dotenv = require("dotenv");
 
+dotenv.config();
 // If the token is valid, express-jwt appends the verified users Id in an auth
 // key to the request object.
 const midAuth = expressJwt({
@@ -10,4 +12,5 @@ const midAuth = expressJwt({
 
 module.exports = {
      midAuth    
-}
+};
+
