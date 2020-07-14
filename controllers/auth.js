@@ -29,11 +29,20 @@ const signin = async (req, res) => {
 
           // generate a token with user ID and secret
           const { _id, name } = user;
+          const payload = {
+               user: {
+                    _id: _id,   
+               }
+          }
+          // }{ _id, name } = user;
 
           // sign with both user id and token:
           const token = jwt.sign(
-               { _id: _id}, 
-               process.env.JWT_SECRET
+               payload, 
+               process.env.JWT_SECRET,
+               {
+                    expiresIn: 900
+               }
           );
           res.cookie(
                "token", 
