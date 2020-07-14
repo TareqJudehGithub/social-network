@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const userSchema = new mongoose.Schema({
      name: {
           type: String,
-          trim: true,  //removes any space before 1st char
+          trim: true,  
           required: true,
      },
      email: {
@@ -22,9 +22,9 @@ const userSchema = new mongoose.Schema({
      salt: String,
      created: {
           type: Date,
-          default: Date.now   // mongoose date format
+          default: Date.now   
      },
-     updated: Date // edit date
+     updated: Date 
 });
 
 // virtual field

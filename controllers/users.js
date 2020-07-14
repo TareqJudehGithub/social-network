@@ -12,14 +12,15 @@ const getUsers = async (req, res) => {
                
           res.json({ users });
      } catch (error) {
-          res.status(500).json({ msg: error});
+          console.log(error.message);
+          res.status(500).json({ msg: "Error! Unable to fetch all users."});
      }
 };
 
 const getUserById = async( req, res) => {
 
      try {
-          req.user.hashed_password = undefined;
+          req.user.hashed_password = undefined; 
           req.user.salt = undefined;
           return await res.json(req.user);
 
@@ -66,7 +67,6 @@ const deleteUser = (req, res, next ) => {
 const userById = async (req, res, next, id) => {
 
     try {
-         
      await User.findById(id)
      .exec((err, user) => {
           if(!user){

@@ -10,7 +10,7 @@ const router = express.Router();
 
 // routes
 router.get("/", getPosts);
-router.post("/", midAuth, postValidator, createPost);
+router.post("/newpost/:userId", midAuth, createPost, postValidator);
 
 // Any route containing :userId, our app will first execute userById() 
 router.param("userId", userById);

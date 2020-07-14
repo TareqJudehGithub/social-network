@@ -19,48 +19,45 @@ const signin = async (req, res) => {
                return res.status(401).json({ msg: "Error! User does not exist."});
           }
      
-     // email and password must match:
-     // user authentication from /models/user.js
-     if(!user.authenticate(password)) {
-          return res.status(401).json({ msg: "Error! Invalid email or password." });
-     }
+          // email and password must match:
+          // user authentication from /models/user.js
+          if(!user.authenticate(password)) {
+               return res.status(401).json({ msg: "Error! Invalid email or password." });
+          }
 
-     // if user exists, then athenticate:
+          // if user exists, then athenticate:
 
-     // generate a token with user ID and secret
-     const { _id, name } = user;
+          // generate a token with user ID and secret
+          const { _id, name } = user;
 
-     // sign with both user id and token:
-     const token = jwt.sign(
-          { _id: _id}, 
-          process.env.JWT_SECRET
-     );
-     res.cookie(
-          "token", 
-          token, 
-          {expire: new Date() + 3600}
-     );
+          // sign with both user id and token:
+          const token = jwt.sign(
+               { _id: _id}, 
+               process.env.JWT_SECRET
+          );
+          res.cookie(
+               "token", 
+               token, 
+               {expire: new Date() + 3600}
+          );
 
-     return res.json({ 
-          token, 
-          user: { 
-               _id: _id,
-               name: name,
-               email: email
+          return res.json({ 
+               token, 
+               user: { 
+                    _id: _id,
+                    name: name,
+                    email: email
           }
      });
-
-
      // persist the token as "token" in cookie with exp date
 
      // return response with user and token to frontend client
 
-     // return response with user and token
-
-     
+     // return response with user and toke  
      } 
      catch (error) {
-          res.status(500).json({ msg: error});
+          console.log(error.message);
+          res.status(500).json({ msg: "Server Error! Error authenticating user!" });
      }
 };
 
@@ -72,13 +69,12 @@ const signup = async (req, res) => {
      }
      
      try {
+          // check if user already exists:
           let user = await User.findOne({ email: req.body.email });
      if(user) {
           return res.status(400).json({ msg: "Error! User already exists!"});
      }
      user = new User(req.body); 
-     // res.json({user});  returns the new user
-     // OR
      res.json({ msg: ` New user ${user.name} sign up was successful.` })
      await user.save();
      } 
