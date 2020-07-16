@@ -1,18 +1,20 @@
 const { 
      getUsers, getUserById, updateUser, deleteUser, userById
 } = require("../controllers/users");
-const { midAuth} = require("../middleware/auth");
+const auth = require("../middleware/auth");
+// const { midAuth } = require("../controllers/auth");
+
 
 const express = require("express");
 const router = express.Router();
 
 
 router.get("/", getUsers);
-router.get("/:userId", midAuth, getUserById);
-router.put("/edit/:userId", midAuth, updateUser);
-router.delete("/del/:userId", midAuth, deleteUser);
+router.get("/:id", auth, getUserById);
+router.put("/edit/:userId", updateUser);
+router.delete("/del/:userId", deleteUser);
 
 // Any route containing :userId, our app will first execute userById() 
-router.param("userId", userById);
+router.param("id", userById);
 
 module.exports = router;

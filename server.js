@@ -19,7 +19,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/", authRoutes);
 app.use("/api/users", userRoutes);
 app.use(morgan("dev"));
-app.use(cookieParser())
+app.use(cookieParser());
 
      // express-jwt custom unautherized error msg:
 app.use(function (err, req, res, next) {

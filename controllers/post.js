@@ -2,9 +2,15 @@ const Post = require("../models/post");
 const { validationResult } = require("express-validator");
 const formidable = require("formidable");
 const fs = require("fs");
+const chalk = require("chalk");
+
+const express = require("express");
+const router = require("../routes/post");
+const app = express();
+
 
 const getPosts = async (req, res) => {
-
+     
     const posts = await Post
           .find()
           .populate("postedBy", "name -_id")
@@ -31,6 +37,7 @@ const getPostByUserId = async(req, res) => {
      }      
 };
 
+
 const createPost = async (req, res, next) => {
      
      // check for other errors:
@@ -50,13 +57,14 @@ const createPost = async (req, res, next) => {
                if(err) {
                     return res.status(400).json({ msg: "Error! New Post failed!" });
                }
+
                // new post with all fields from req
-               let post = await new Post(fields)
+               let post = await new Post(fields);
 
                req.user.hashed_password = undefined;
                req.user.salt = undefined;
-               post.postedBy = req.user;
-               
+               post.postedBy = req.user.id; // add field postedBy to the new post doc.
+              
                if (files.image){ //if the file includes an image
                     post.image.data = fs.readFileSync(files.image.path);
                     post.image.contentType = files.image.type;
@@ -72,11 +80,92 @@ const createPost = async (req, res, next) => {
      }
      
 };
+const deletePost = async (req, res) => {
+
+     const { title } = req.body;
+     try {
+
+          let post = await Post.findById(req.params.id);
+
+          console.log("params: ", req.params.id);
+          console.log("req.user.id: ", req.user.id);
+          console.log("Posted By: ", post.postedBy.toString());
+
+          if(!post) res.status(401).json({ msg: "Message not found!"});
+          if(post.postedBy.toString() !== req.user.id) {
+               res.status(403).json({ msg: "Action is not authorized! "});
+          }
+          await Post.findByIdAndRemove(req.params.id);
+          res.json({ msg: 'Post deleted successfully'});
+          console.log(chalk.blue(`${post.title} was deleted successfully!`));     
+     } 
+     catch (error) {
+          console.log(error.message);
+          res.status(500).json(chalk.red({ msg: "Server Error 500! Delete user failed!"}));
+     }
+};
+
+     // Solution 2:
+     // let post = req.post;
+     // post.remove((err, post) => {
+     //    if (err) {
+     //        return res.status(400).json({
+     //            error: err
+     //        });
+     //    }
+     //    res.json({
+     //        msg: 'Post deleted successfully'
+     //    });
+     // });
+// }
+
+// Middlewares:
+
+const postById = async(req, res, next, id)  => {
+   try {
+       
+     // find post based on ID
+     const post = await Post.findById(id)
+          .populate("postedBy", "_id name");
+     if(!post){
+          res.status(400).json({ msg: chalk.red("Error! Message not found!")});
+     }
+     // get the post based on the query, and add it to req obj:
+     req.post = post;
+     next();
+     
+   } 
+   catch (error) {
+        console.log(chalk.red(error.message));
+        res.status(500).json({ msg: chalk.red("Error!")})
+   }
+}
+const hasAuth = (req, res, next) => {
+
+     let isAuthorized = req.post && req.auth && req.post.postedBy._id == req.auth._id;
+     
+     console.log(isAuthorized);
+     console.log(req.post.postedBy._id);
+     console.log(req.auth._id);
+     
+
+     if(!isAuthorized){
+          return res.status(403).json({ msg: "User is not authorized to perform this action!"});
+     }
+     next();  //if user is authorized, then give auth
+};
+
+
+
 
 module.exports = {
      getPosts,
      createPost,
-     getPostByUserId
+     deletePost,
+     getPostByUserId,
+     
+     postById,
+     hasAuth
 };
 
 
