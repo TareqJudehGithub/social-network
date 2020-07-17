@@ -5,7 +5,6 @@ const { userById } = require("../controllers/users");
 const { postValidator } = require("../validator/index");
 
 const chalk = require("chalk");
-const Post = require("../models/post");
 
 const express = require("express");
 const router = express.Router();
@@ -16,10 +15,10 @@ router.get("/", getPosts);
 router.post("/newpost/:userId", auth, createPost, postValidator);
 router.delete("/delpost/:id" , auth, deletePost);
 
-router.get("/:userId", getPostByUserId);
+router.get("/:id", auth, getPostByUserId);
 // Any route containing :userId, our app will first execute userById() 
 router.param("userId", userById);
 
 // any route containing postId, our app will first execute postById()
-router.param("id", postById);
+// router.param("id", deletePost);
 module.exports= router;

@@ -4,16 +4,13 @@ const formidable = require("formidable");
 const fs = require("fs");
 const chalk = require("chalk");
 
-const express = require("express");
-const router = require("../routes/post");
-const app = express();
-
 
 const getPosts = async (req, res) => {
      
+     
     const posts = await Post
           .find()
-          .populate("postedBy", "name -_id")
+          .populate("postedBy", "name _id")
           .sort({ date: -1 })
           .select("_id title body");
     try {
@@ -25,16 +22,31 @@ const getPosts = async (req, res) => {
     }
 };
 const getPostByUserId = async(req, res) => {
+
      try {
-          const posts = await Post.find({ postedBy: req.user._id })  //user ID from users/postedBy document.)
-               .populate("postedBy", "_id name")
-               .sort("_created")  //sort posts by date. 
-          res.json(posts);    
-     } 
-     catch (error) {
-          console.log(error.message);
+          const userPosts = await Post
+          .find({ postedBy: req.user.id })
+          .populate("postedBy", "_id name")
+          .sort("_created");
+          console.log(`PostedBy ID: `, req.user.id);
+         
+          console.log(`Users posts: `, userPosts)
+          console.log(chalk.blue(`Fetching user posts was successful!`));
+     } catch (error) {
+          console.log(chalk.red(error.message));
           res.status(500).json({ msg: "Error! Unable to get user's posts."});
-     }      
+     }
+
+     // try {
+     //      const posts = await Post.find({ postedBy: req.user._id })  //user ID from users/postedBy document.)
+     //           .populate("postedBy", "_id name")
+     //           .sort("_created")  //sort posts by date. 
+     //      res.json(posts);    
+     // } 
+     // catch (error) {
+     //      console.log(chalk.red(error.message));
+     //      res.status(500).json({ msg: "Error! Unable to get user's posts."});
+     // }      
 };
 
 
@@ -54,15 +66,13 @@ const createPost = async (req, res, next) => {
           form.keepExtensions = true; // show files ext
 
           form.parse(req, async(err, fields, files) => {
-               if(err) {
-                    return res.status(400).json({ msg: "Error! New Post failed!" });
-               }
-
+               
+               console.log(fields);
                // new post with all fields from req
                let post = await new Post(fields);
 
-               req.user.hashed_password = undefined;
-               req.user.salt = undefined;
+               // req.user.hashed_password = undefined;
+               // req.user.salt = undefined;
                post.postedBy = req.user.id; // add field postedBy to the new post doc.
               
                if (files.image){ //if the file includes an image
@@ -82,12 +92,10 @@ const createPost = async (req, res, next) => {
 };
 const deletePost = async (req, res) => {
 
-     const { title } = req.body;
      try {
-
           let post = await Post.findById(req.params.id);
 
-          console.log("params: ", req.params.id);
+          console.log("Post params: ", req.params.id);
           console.log("req.user.id: ", req.user.id);
           console.log("Posted By: ", post.postedBy.toString());
 
@@ -121,25 +129,25 @@ const deletePost = async (req, res) => {
 
 // Middlewares:
 
-const postById = async(req, res, next, id)  => {
-   try {
+// const postById = async(req, res, next, id)  => {
+//    try {
        
-     // find post based on ID
-     const post = await Post.findById(id)
-          .populate("postedBy", "_id name");
-     if(!post){
-          res.status(400).json({ msg: chalk.red("Error! Message not found!")});
-     }
-     // get the post based on the query, and add it to req obj:
-     req.post = post;
-     next();
+//      // find post based on ID
+//      const post = await Post.findById(id)
+//           .populate("postedBy", "_id name");
+//      if(!post){
+//           res.status(400).json({ msg: chalk.red("Error! Message not found!")});
+//      }
+//      // get the post based on the query, and add it to req obj:
+//      req.post = post;
+//      next();
      
-   } 
-   catch (error) {
-        console.log(chalk.red(error.message));
-        res.status(500).json({ msg: chalk.red("Error!")})
-   }
-}
+//    } 
+//    catch (error) {
+//         console.log(chalk.red(error.message));
+//         res.status(500).json({ msg: chalk.red("Error!")})
+//    }
+// }
 const hasAuth = (req, res, next) => {
 
      let isAuthorized = req.post && req.auth && req.post.postedBy._id == req.auth._id;
@@ -164,7 +172,7 @@ module.exports = {
      deletePost,
      getPostByUserId,
      
-     postById,
+     // postById,
      hasAuth
 };
 

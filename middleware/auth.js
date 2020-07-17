@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const chalk = require("chalk");
 
 dotenv.config();
 // If the token is valid, express-jwt appends the verified users Id in an auth
@@ -17,8 +18,8 @@ module.exports = function(req, res, next) {
           next();
 
      } catch (error) {
-          console.log(error.message);
-          res.status(401).json({ msg: "Token is not valid "});
+          console.log(chalk.red(error.message));
+          res.status(401).json({ msg: "Error! Token is not valid! "});
      }     
 };
 

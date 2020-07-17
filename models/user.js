@@ -24,7 +24,9 @@ const userSchema = new mongoose.Schema({
           type: Date,
           default: Date.now   
      },
-     updated: Date 
+     updated: {
+          type: Date
+     }
 });
 
 // virtual field

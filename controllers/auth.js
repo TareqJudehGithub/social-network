@@ -119,8 +119,9 @@ const signup = async (req, res) => {
           return res.status(400).json({ msg: "Error! User already exists!"});
      }
      user = new User(req.body); 
-     res.json({ msg: ` New user ${user.name} sign up was successful.` })
+     res.json({ msg: `New user ${user.name} sign up was successful.` })
      await user.save();
+     console.log(chalk.blue(`New user ${user.name} signing up was successful.`))
      } 
      catch (error) {
           console.log(error.message);

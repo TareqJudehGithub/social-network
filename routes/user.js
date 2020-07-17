@@ -11,10 +11,11 @@ const router = express.Router();
 
 router.get("/", getUsers);
 router.get("/:id", auth, getUserById);
-router.put("/edit/:userId", updateUser);
-router.delete("/del/:userId", deleteUser);
+router.put("/edit/:id", auth, updateUser);
+router.delete("/del/:id", auth, deleteUser) 
 
-// Any route containing :userId, our app will first execute userById() 
-router.param("id", userById);
+// Any route containing :id, our app will first execute userById() 
+
+// router.param("userId", userById);
 
 module.exports = router;
