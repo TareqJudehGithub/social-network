@@ -45,6 +45,9 @@ const updateUser = async(req, res) => {
           if(!user){
                return res.status(404).json({ msg: "Error! User not found!"});               
           };
+          if(email){
+               return res.status(404).json({ msg: "Error! Email address is already in use!"});               
+          }
           if(user.id !== req.user.id){
                return res.status(401).json({ msg: "This action is not authorized!" });                
           };

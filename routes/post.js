@@ -12,12 +12,13 @@ const router = express.Router();
 
 // routes
 router.get("/", getPosts);
-router.post("/newpost/:userId", auth, createPost, postValidator);
+router.get("/:id", auth, getPostByUserId);
+router.post("/newpost/:id", auth, createPost, postValidator);
 router.delete("/delpost/:id" , auth, deletePost);
 
-router.get("/:id", auth, getPostByUserId);
+
 // Any route containing :userId, our app will first execute userById() 
-router.param("userId", userById);
+// router.param("userId", userById);
 
 // any route containing postId, our app will first execute postById()
 // router.param("id", deletePost);

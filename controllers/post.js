@@ -28,9 +28,9 @@ const getPostByUserId = async(req, res) => {
           .find({ postedBy: req.user.id })
           .populate("postedBy", "_id name")
           .sort("_created");
-          console.log(`PostedBy ID: `, req.user.id);
-         
-          console.log(`Users posts: `, userPosts)
+
+          res.json(userPosts);
+
           console.log(chalk.blue(`Fetching user posts was successful!`));
      } catch (error) {
           console.log(chalk.red(error.message));
@@ -51,7 +51,7 @@ const getPostByUserId = async(req, res) => {
 
 
 const createPost = async (req, res, next) => {
-     
+     const { title, body, created } = req.body;
      // check for other errors:
      const errors = validationResult(req);   
       if(!errors.isEmpty()){
@@ -67,10 +67,11 @@ const createPost = async (req, res, next) => {
 
           form.parse(req, async(err, fields, files) => {
                
-               console.log(fields);
                // new post with all fields from req
-               let post = await new Post(fields);
+               let post = await Post.findById(req.user.id);
 
+               console.log(`Poster params: `, req.user.id);
+               post = new Post(fields);
                // req.user.hashed_password = undefined;
                // req.user.salt = undefined;
                post.postedBy = req.user.id; // add field postedBy to the new post doc.
@@ -81,7 +82,7 @@ const createPost = async (req, res, next) => {
                }
 
                await post.save();
-               res.json(post); 
+               res.json(`New Post: ${post.title}`); 
           });
      } 
      catch (error) {
@@ -95,14 +96,19 @@ const deletePost = async (req, res) => {
      try {
           let post = await Post.findById(req.params.id);
 
+         
+
+          if(!post){
+               return res.status(401).json({ msg: "Message not found!"});
+             
+          }
+          if(post.postedBy.toString() !== req.user.id) {
+               return res.status(403).json({ msg: "Action is not authorized! "});
+          }
           console.log("Post params: ", req.params.id);
           console.log("req.user.id: ", req.user.id);
           console.log("Posted By: ", post.postedBy.toString());
 
-          if(!post) res.status(401).json({ msg: "Message not found!"});
-          if(post.postedBy.toString() !== req.user.id) {
-               res.status(403).json({ msg: "Action is not authorized! "});
-          }
           await Post.findByIdAndRemove(req.params.id);
           res.json({ msg: 'Post deleted successfully'});
           console.log(chalk.blue(`${post.title} was deleted successfully!`));     
