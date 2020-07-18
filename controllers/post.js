@@ -24,12 +24,16 @@ const getPosts = async (req, res) => {
 const getPostByUserId = async(req, res) => {
 
      try {
-          const userPosts = await Post
+          const post = await Post
           .find({ postedBy: req.user.id })
           .populate("postedBy", "_id name")
           .sort("_created");
 
-          res.json(userPosts);
+          if(!post){
+               return res.status(401).json({ msg: `Error! Post not found`});
+          }
+          
+          res.json(post);
 
           console.log(chalk.blue(`Fetching user posts was successful!`));
      } catch (error) {
@@ -51,7 +55,7 @@ const getPostByUserId = async(req, res) => {
 
 
 const createPost = async (req, res, next) => {
-     const { title, body, created } = req.body;
+
      // check for other errors:
      const errors = validationResult(req);   
       if(!errors.isEmpty()){
@@ -70,7 +74,6 @@ const createPost = async (req, res, next) => {
                // new post with all fields from req
                let post = await Post.findById(req.user.id);
 
-               console.log(`Poster params: `, req.user.id);
                post = new Post(fields);
                // req.user.hashed_password = undefined;
                // req.user.salt = undefined;
@@ -91,23 +94,57 @@ const createPost = async (req, res, next) => {
      }
      
 };
+
+const updatePost = async (req, res) => {
+     
+     let { title, body, image, updated } = req.body;
+
+     const postFields = {};
+     if(title) postFields.title = title;
+     if(body) postFields.body = body;
+     if(image) postFields.image = image;
+
+     updated = Date.now();
+     if (updated) postFields.updated = updated;
+
+     try {
+          let post = await Post.findById(req.params.id);
+         
+          if(!post) {
+               return res.status(401).json({ msg: `Post not found!`});
+          };
+          if(post.postedBy._id.toString() !== req.user.id) {
+               return res.status(403).json({ msg: `This action is not authorized!`});
+          };
+
+          post = await Post
+               .findByIdAndUpdate(
+                    req.params.id,
+                    {$set: postFields},
+                    {new: true}
+               );
+          console.log(chalk.blue(`Post update was successful!`));
+
+          res.json(post);
+          console.log(chalk.blue(`Post "${post.title}" update was successful!`));
+
+     } catch (error) {
+          console.log(chalk.red(error.message));
+          return res.status(403).json({ msg: `Error updating post!`});
+     }
+};
+
 const deletePost = async (req, res) => {
 
      try {
           let post = await Post.findById(req.params.id);
 
-         
-
           if(!post){
                return res.status(401).json({ msg: "Message not found!"});
-             
-          }
+          };
           if(post.postedBy.toString() !== req.user.id) {
                return res.status(403).json({ msg: "Action is not authorized! "});
-          }
-          console.log("Post params: ", req.params.id);
-          console.log("req.user.id: ", req.user.id);
-          console.log("Posted By: ", post.postedBy.toString());
+          };
 
           await Post.findByIdAndRemove(req.params.id);
           res.json({ msg: 'Post deleted successfully'});
@@ -175,6 +212,7 @@ const hasAuth = (req, res, next) => {
 module.exports = {
      getPosts,
      createPost,
+     updatePost,
      deletePost,
      getPostByUserId,
      

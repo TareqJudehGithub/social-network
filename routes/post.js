@@ -1,4 +1,4 @@
-const { getPosts, getPostByUserId, createPost, deletePost } = require("../controllers/post");
+const { getPosts, getPostByUserId, createPost, updatePost, deletePost } = require("../controllers/post");
 const { postById, hasAuth} = require("../controllers/post");
 const auth = require("../middleware/auth"); 
 const { userById } = require("../controllers/users");
@@ -12,8 +12,9 @@ const router = express.Router();
 
 // routes
 router.get("/", getPosts);
-router.get("/:id", auth, getPostByUserId);
+router.get("/poster/:id", auth, getPostByUserId);
 router.post("/newpost/:id", auth, createPost, postValidator);
+router.put("/edit/:id", auth, updatePost);
 router.delete("/delpost/:id" , auth, deletePost);
 
 

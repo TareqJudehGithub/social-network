@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const _ = require("lodash");
 const chalk = require("chalk");
+const { blue } = require("chalk");
 
 const getUsers = async (req, res) => {
    
@@ -22,7 +23,13 @@ const getUserById = async( req, res) => {
           const user = await User
           .findById(req.params.id)
           .select(" -salt -hashed_password");
-          return await res.json(user);
+     
+     if(!user){
+          return res.status(401).json({ msg: `User not found error!`});
+     };
+
+     console.log(chalk(blue(`User: `, chalk.yellow(user.name)), chalk.blue(`found!`)));
+     return await res.json(user);
 
      } catch (error) {
           res.status(500).json({ msg: error});
@@ -40,17 +47,17 @@ const updateUser = async(req, res) => {
 
      updated = Date.now();
      if(updated) userFields.updated = updated;
+
      try {
           let user = await User.findById(req.params.id)
           if(!user){
                return res.status(404).json({ msg: "Error! User not found!"});               
           };
-          if(email){
-               return res.status(404).json({ msg: "Error! Email address is already in use!"});               
-          }
+         
           if(user.id !== req.user.id){
                return res.status(401).json({ msg: "This action is not authorized!" });                
           };
+          
           user = await User
           .findByIdAndUpdate(
                req.params.id,
@@ -58,7 +65,7 @@ const updateUser = async(req, res) => {
                {new: true},        
           )
           res.json(user);
-          console.log(chalk.blue(`User ${user.name} information update was successful!`));
+          console.log(chalk.blue(`User "${user.name}" information update was successful!`));
 
           // Solution 2:
           // let user = req.user;
