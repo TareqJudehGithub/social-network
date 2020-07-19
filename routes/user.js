@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/", getUsers);
 router.get("/:id", auth, getUserById);
-router.put("/edit/:id", auth, updateUser);
+router.put("/update/:id", auth, updateUser);
 router.delete("/del/:id", auth, deleteUser) 
 
 // Any route containing :id, our app will first execute userById() 

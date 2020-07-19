@@ -1,8 +1,9 @@
 
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 // const expressJwt = require("express-jwt");
-const dotenv = require("dotenv");  //for JWT_SECRET
+const dotenv = require("dotenv");  
 const User = require("../models/user");
 const chalk = require("chalk");
 
@@ -19,14 +20,19 @@ const signin = async (req, res) => {
           // if user does not exist: 
           if(!user ) {
                return res.status(401).json({ msg: "Error! User does not exist."});
+          };
+          const isMatch = await bcrypt.compare(password, user.password);
+          if(!isMatch){
+               return res.status(400).json({ msg: "Invalid username or password!"});
           }
-     
+          
           // email and password must match:
           // user authentication from /models/user.js
-          if(!user.authenticate(password)) {
-               console.log(chalk.red("Error! Invalid email or password!"));
-               return res.status(401).json({ msg: "Error! Invalid email or password." });
-          }
+
+          // if(!user.authenticate(password)) {
+          //      console.log(chalk.red("Error! Invalid email or password!"));
+          //      return res.status(401).json({ msg: "Error! Invalid email or password." });
+          // }
 
           // if user exists, then athenticate:
 
@@ -40,7 +46,7 @@ const signin = async (req, res) => {
                payload,
                process.env.JWT_SECRET,
                {
-                    expiresIn: 900,
+                    expiresIn: 1800,
                     // algorithm: 'HS256',
                },
                (error, token) => {
@@ -112,22 +118,31 @@ const signup = async (req, res) => {
           return res.status(400).json({ errors: errors.array()[0]});
      }
      
+     const { name, email, password } = req.body;
      try {
           // check if user already exists:
-          let user = await User.findOne({ email: req.body.email });
+          let user = await User.findOne({ email: email });
      if(user) {
           return res.status(400).json({ msg: "Error! User already exists!"});
      }
+
      user = new User(req.body); 
-     res.json({ msg: `New user ${user.name} sign up was successful.` })
+     // hashing the password:
+     const salt = await bcrypt.genSalt(10);
+     user.password = await bcrypt.hash(password, salt);
+
      await user.save();
+
+     res.json(user);
      console.log(chalk.blue(`New user ${user.name} signing up was successful.`))
      } 
+
      catch (error) {
           console.log(error.message);
           res.status(500).json({ mesg: "Error creating new user!"});
      }
-}
+};
+
 const signOut = async(req, res) => {
      await res.clearCookie("token");
      res.json({ msg: "Signout was successful!"});
