@@ -115,10 +115,10 @@ const signup = async (req, res) => {
      
      const errors = validationResult(req);
      if(!errors.isEmpty()){
-          return res.status(400).json({ errors: errors.array()[0]});
+          return res.status(422).json({ errors: errors.array()[0]});
      }
      
-     const { name, email, password } = req.body;
+     const { email, password } = req.body;
      try {
           // check if user already exists:
           let user = await User.findOne({ email: email });
@@ -139,7 +139,7 @@ const signup = async (req, res) => {
 
      catch (error) {
           console.log(error.message);
-          res.status(500).json({ mesg: "Error creating new user!"});
+          res.status(500).json({ msg: "Error creating new user!"});
      }
 };
 

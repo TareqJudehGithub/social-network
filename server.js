@@ -32,11 +32,10 @@ const userRoutes = require("./routes/user");
 const cookieParser = require("cookie-parser");
 
 // middleware
+app.use(cors());
 app.use("/api/posts", postRoutes);
 app.use("/api/", authRoutes);
 app.use("/api/users", userRoutes);
-
-app.use(cors());
 app.use(morgan("dev"));
 app.use(cookieParser());
 

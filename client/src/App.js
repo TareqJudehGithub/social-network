@@ -1,12 +1,13 @@
 import React from 'react';
+import MainRouter from "./MainRouter";
+const  App = () => {
 
-
-function App() {
   return (
-    <div className="container">
-     <h1>Hello from React!</h1>
-    </div>
+
+    <div->
+     <MainRouter />
+    </div->
   );
 }
-
+  
 export default App;
