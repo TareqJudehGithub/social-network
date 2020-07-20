@@ -151,8 +151,8 @@ const deletePost = async (req, res) => {
           console.log(chalk.blue(`${post.title} was deleted successfully!`));     
      } 
      catch (error) {
-          console.log(error.message);
-          res.status(500).json(chalk.red({ msg: "Server Error 500! Delete user failed!"}));
+          console.log(chalk.red(error.message));
+          res.status(500).json({ msg: "Server Error 500! Delete user failed!"});
      }
 };
 
