@@ -4,9 +4,9 @@ const  App = () => {
 
   return (
 
-    <div->
+    <div>
      <MainRouter />
-    </div->
+    </div>
   );
 }
   

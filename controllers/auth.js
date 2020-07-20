@@ -63,7 +63,6 @@ const signin = async (req, res) => {
                }
           );
 
-
           // Expres-jwt:
           // generate a token with user ID and secret
           // const { _id, name } = user;
@@ -115,7 +114,7 @@ const signup = async (req, res) => {
      
      const errors = validationResult(req);
      if(!errors.isEmpty()){
-          return res.status(422).json({ errors: errors.array()[0]});
+          return res.status(422).json({ msg: errors.array()[0].msg });
      }
      
      const { email, password } = req.body;

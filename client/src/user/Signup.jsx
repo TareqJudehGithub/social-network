@@ -26,15 +26,9 @@ class Signup extends React.Component {
           const { name, email, password, password2 } = this.state;
 
           if(password2 !== password){
-
-              // return alert(`Password and Confirm Password must match!`);
-               return(
-                    <div class="alert alert-danger" role="alert">
-                         {
-                              alert(`Password and Confirm Password must match!`)
-                         }
-                    </div>
-               )
+              return this.setState({
+                   error: `Password and Confirm Password must match!`
+              })
           }
           else{
                const user = {
@@ -42,13 +36,12 @@ class Signup extends React.Component {
                     email: email,
                     password: password
                };
-             
+               
                this.signUp(user)
-               .then(data => {
-                    if(data.msg){
-                         console.log(`Error: `, this.state.error);
-                         return this.setState({ error: data.msg });
+               .then(error => {
+                    if(error.msg){
                          
+                         return this.setState({ error: error.msg });
                     }      
                     else {                 
                          this.setState({
@@ -64,8 +57,8 @@ class Signup extends React.Component {
           }
      };
      
-     signUp = async(user) => {
-          return await fetch(`http://localhost:8080/api/signup`, {
+     signUp = user => {
+          return fetch(`http://localhost:8080/api/signup`, {
                method: "POST",
                headers: {
                     Accept: "application/json",
@@ -82,18 +75,17 @@ class Signup extends React.Component {
      }
 
      render() {
+          
           const { name, email, password, password2, error, open } = this.state;
           return (
                <div className="container">
                     <h2 className="mt-5 mb-5">Sign up</h2>
 
-
-
                     <form className="m-5" onSubmit={this.onSubmitHandler}>
 
                          <div className="form-group">
                               <label className="text-muted" htmlFor="name">Name</label>
-                              <input className="form-control form-control"
+                              <input className="form-control"
                                    type="text" name="name" value={name}
                                    placeholder="" autoFocus
                                    onChange={this.onchangeHandler}
@@ -130,18 +122,7 @@ class Signup extends React.Component {
                          <button className="btn btn-primary" type="submit">
                               Signup
                          </button>
-{/*                          
-                         {
-                              error
-                              ?
-                              <div className="alert alert-danger" role="alert"  
-                              >
-                                   {error}
-                              </div>
-                              :
-                              null
-
-                         } */}
+                         
                          <div className="alert alert-danger" role="alert"
                               style={{
                                    display: error ? "" : "none"

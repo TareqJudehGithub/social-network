@@ -21,7 +21,7 @@ const postValidator = [
 ]
 const userValidator = [
      // name
-     check("name", "Please enter a user name")
+     check("name", "Name must not be empty!")
           .not().isEmpty().bail(),
      check("name", "Name must be between 2 and 150 characters.")
           .isLength({ min: 2, max: 150}),
