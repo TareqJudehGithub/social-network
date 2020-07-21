@@ -34,19 +34,29 @@ const userValidator = [
           .isEmail(),
      check("email", "User email address already exists!")
           .exists(),
+          
      // password
-    
      check("password", "Please enter a password")
           .not().isEmpty().bail(),
      check("password", "Password must be between 6 and 15 characters.")
           .isLength({ min: 6, max: 15}).bail(),
-     check("password", "Password must contain at least one number.")
-          .matches(/\d/).bail(),
-          check("password", "Password must contain at least one symbol.")
-          .matches(/[!@#$%&*()-/:-?{-~!"^_`\[\]]/).bail()
+     check("password", "Password must at contain a number and a symbol.")
+          .matches(/\d/).matches(/[!@#$%&*()-/:-?{-~!"^_`\[\]]/).bail()
 ] 
+const userSigninValidator = [
+     // Email
+     check("email", "Email Address must not be empty.")
+          .not().isEmpty(),
+     check("email", "Please enter a valid email address.")
+          .isEmail(),
+     
+     // Password
+     check("password", "Password must not be empty.")
+          .not().isEmpty()
+]
  
 module.exports = {
      postValidator,
-     userValidator
+     userValidator,
+     userSigninValidator
 };

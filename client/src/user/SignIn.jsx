@@ -8,7 +8,8 @@ export class SignIn extends React.Component {
                email: "",
                password: "",
                error: "",
-               redirectToRefer: false
+               redirectToRefer: false,
+               loading: true
           }
      }
      onChangeHandler = event =>{
@@ -24,6 +25,8 @@ export class SignIn extends React.Component {
 
           event.preventDefault();
 
+          this.setState({ loading: true });
+
           const user = {
                email: email,
                password: password
@@ -32,7 +35,10 @@ export class SignIn extends React.Component {
           this.signIn(user)
           .then(data => {
                if(data.msg){
-                    this.setState({ error: data.msg });
+                    this.setState({ 
+                         error: data.msg,
+                         loading: false
+                     });
                }
                else{
                     this.authenticate(data, () => {
@@ -40,7 +46,8 @@ export class SignIn extends React.Component {
                               email: "",
                               password: "",
                               error: "",
-                              redirectToRefer: true
+                              redirectToRefer: true,
+                              loading: false
                          })
                     })
                }
@@ -68,7 +75,7 @@ export class SignIn extends React.Component {
      };
 
      render() {
-          const { email, password, error, redirectToRefer } = this.state;
+          const { email, password, error, redirectToRefer, loading } = this.state;
           if(redirectToRefer) {
                return <Redirect to="/"/>
           }
@@ -85,7 +92,7 @@ export class SignIn extends React.Component {
                               </label>
                               <input className="form-control"
                                    type="email" name="email" value={email} autoFocus
-                                   onChange={this.onChangeHandler} required
+                                   onChange={this.onChangeHandler} 
                               />
                          </div>
                          <div className="form-group">
@@ -100,13 +107,24 @@ export class SignIn extends React.Component {
                          <button className="btn btn-primary" type="submit">
                               Signup
                          </button>
-                         <div className="alert alert-danger" role="alert"
-                              style={{
-                                   display: error ? "" : "none"
-                              }}     
-                         >
-                              {error}
-                         </div>
+                         {
+                              error
+                              && 
+                              <div className="alert alert-danger" role="alert">
+                                   {error}
+                              </div>
+                         }
+                         {
+                              loading
+                              && 
+                              // <div className="spinner-border text-success" role="status">
+                              //      <span className="sr-only">Loading...</span>
+                              // </div>
+                              <div className="alert alert-info" role="alert">
+                                   Loading please wait...
+                              </div>
+                         }
+
                     </form>
                </div>
           )

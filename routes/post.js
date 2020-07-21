@@ -1,10 +1,7 @@
 const { getPosts, getPostByUserId, createPost, updatePost, deletePost } = require("../controllers/post");
 const { postById, hasAuth} = require("../controllers/post");
 const auth = require("../middleware/auth"); 
-const { userById } = require("../controllers/users");
 const { postValidator } = require("../validator/index");
-
-const chalk = require("chalk");
 
 const express = require("express");
 const router = express.Router();

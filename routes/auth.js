@@ -4,10 +4,10 @@ const { signup, signin, signOut } = require("../controllers/auth");
 const express = require("express");
 const router = express.Router();
 
-const { userValidator } = require("../validator/index");
+const { userValidator, userSigninValidator } = require("../validator/index");
 
 router.post("/signup", userValidator, signup);
-router.post("/signin", signin);
+router.post("/signin", userSigninValidator, signin);
 router.get("/signout", signOut);
 
 // Any route containing :userId, our app will first execute userById();
