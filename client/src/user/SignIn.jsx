@@ -1,5 +1,6 @@
 import React from 'react';
 import {Redirect} from "react-router-dom";
+import { signIn, authenticate } from "../auth/index";
 
 export class SignIn extends React.Component {
      constructor(){
@@ -9,7 +10,7 @@ export class SignIn extends React.Component {
                password: "",
                error: "",
                redirectToRefer: false,
-               loading: true
+               loading: false
           }
      }
      onChangeHandler = event =>{
@@ -32,7 +33,7 @@ export class SignIn extends React.Component {
                password: password
           };
 
-          this.signIn(user)
+          signIn(user)
           .then(data => {
                if(data.msg){
                     this.setState({ 
@@ -41,7 +42,7 @@ export class SignIn extends React.Component {
                      });
                }
                else{
-                    this.authenticate(data, () => {
+                    authenticate(data, () => {
                          this.setState({
                               email: "",
                               password: "",
@@ -52,26 +53,6 @@ export class SignIn extends React.Component {
                     })
                }
           })
-     };
-
-     signIn = user => {
-          return fetch("http://localhost:8080/api/signin", {
-               method: "POST",
-               headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-               },
-               body: JSON.stringify(user)
-          })
-          .then(response => response.json())
-          .catch(error => console.log(error));
-     };
-
-     authenticate = (token, next) => {
-          if(typeof window!== "undefined") {
-               localStorage.setItem("token", JSON.stringify(token));
-               next();
-          }
      };
 
      render() {
@@ -117,9 +98,6 @@ export class SignIn extends React.Component {
                          {
                               loading
                               && 
-                              // <div className="spinner-border text-success" role="status">
-                              //      <span className="sr-only">Loading...</span>
-                              // </div>
                               <div className="alert alert-info" role="alert">
                                    Loading please wait...
                               </div>
