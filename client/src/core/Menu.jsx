@@ -11,8 +11,12 @@ const isActive = (history, path) => {
      }
 };
 
+
 const Menu = ({ history }) => {
 
+     if(isAuthenticated){ 
+          console.log(isAuthenticated().user._id); 
+     }
      return (
           <ul className="nav nav-tabs bg-primary">     
 
@@ -50,12 +54,15 @@ const Menu = ({ history }) => {
                                    Sign Out
                               </a>
                          </li>
-                         <li className="nav-item">
-                              <a className="nav-link" href="#!"
-                                   style={ isActive(history, "") }
-                              >
-                                   { isAuthenticated().user.name }             
-                              </a>
+                         <li className="nav-item"> 
+                                   <Link className="nav-link" 
+                                        to={`/users/${isAuthenticated().user._id}`}
+                                        style={ isActive(history, 
+                                             `/users/${isAuthenticated().user._id}`)}
+                                   >
+                                        {`Hello, ${isAuthenticated().user.name}!`}  
+                                        
+                                   </Link> 
                          </li>
                     </React.Fragment>
                }
