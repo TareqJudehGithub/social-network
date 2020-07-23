@@ -1,6 +1,7 @@
 // SignUp component method:
 export const signUp = user => {
-          return fetch(`http://localhost:8080/api/signup`, {
+          
+          return fetch(`${process.env.REACT_APP_API_URL}/api/signup`, {
                method: "POST",
                headers: {
                     Accept: "application/json",
@@ -17,7 +18,7 @@ export const signUp = user => {
 };
 // SignIn component methods:
 export const signIn = user => {
-          return fetch("http://localhost:8080/api/signin", {
+          return fetch(`${process.env.REACT_APP_API_URL}/api/signin`, {
                method: "POST",
                headers: {
                     Accept: "application/json",
@@ -42,7 +43,7 @@ export const signOut = next => {
      if(typeof window !== "undefined") localStorage.removeItem("token");
      next();
      // server side: 
-     return fetch("http://localhost:8080/api/signout", {
+     return fetch(`${process.env.REACT_APP_API_URL}/api/signout`, {
           method: "GET"
      })
      .then(response => {

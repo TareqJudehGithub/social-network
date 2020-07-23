@@ -14,9 +14,6 @@ const isActive = (history, path) => {
 
 const Menu = ({ history }) => {
 
-     if(isAuthenticated){ 
-          console.log(isAuthenticated().user._id); 
-     }
      return (
           <ul className="nav nav-tabs bg-primary">     
 
