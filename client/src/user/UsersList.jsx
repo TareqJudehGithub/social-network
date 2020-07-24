@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { list } from "./apiUser";
 
-class Users extends Component {
+class UsersList extends Component {
     state = {
          users: []
-    }
+    };
+    
     componentDidMount = () => {
          // list all users method: 
          list()
@@ -22,12 +23,17 @@ class Users extends Component {
                <div className="container">
                     <h2 className="mt-5 mb-5">Users</h2>
 
-                    <div className="card">
+                    <div className="row">
                     {  
                           users.map(user => {
                              return (
-                              <div key={user._id}>
-                                   {user.name}
+                              <div className="card col-md-4" key={user._id}>
+                                   <img className="card-img-top" src="" alt="user" />
+                                   <div className="card-body">
+                                   <h5 className="card-title">{user.name}</h5>
+                                   <p className="card-text">{user.email}</p>
+                                   <a href="#!" className="btn btn-primary">View Profile</a>
+                                   </div>
                               </div>
                              )
                          })
@@ -38,4 +44,4 @@ class Users extends Component {
      }
 }
 
-export default Users;
+export default UsersList;
