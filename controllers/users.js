@@ -10,7 +10,7 @@ const getUsers = async (req, res) => {
                .find()
                .select("name email created updated");
                
-          res.json({ users });
+          res.json(users);
      } catch (error) {
           console.log(error.message);
           res.status(500).json({ msg: "Error! Unable to fetch all users."});
