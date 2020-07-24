@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { isAuthenticated } from "../auth/index";
 import { read } from "./apiUser";
 
@@ -24,25 +24,47 @@ class Profile extends Component {
           });
      };
 
-
      componentDidMount() {
-
           const userId = this.props.match.params.id;
           this.init(userId);
-         
-     }
+     };
+
      render() {
-          const redirectToSignIn = this.state.redirectToSignIn;
+          const { user, redirectToSignIn } = this.state;
+          
           if(redirectToSignIn){
                return <Redirect to="/signin"/>
           }
+         
           return (
                <div className="container m-2">
-                    <h2 className="mt-5 mb-5">Profile Page</h2>
-                    <p>{`Name: ${isAuthenticated().user.name}`}</p>
-                    <p>{`Email Address: ${isAuthenticated().user.email}`}</p>
-                    <p>{`Joined: ${new Date(this.state.user.created).toDateString()}`}</p>
-                    
+                    <div className="row">
+                              
+                         <div className="col-md-6">
+                              <h2 className="mt-5 mb-5">Profile Page</h2>
+                              <p>{`Name: ${isAuthenticated().user.name}`}</p>
+                              <p>{`Email Address: ${isAuthenticated().user.email}`}</p>
+                              <p>{`Joined: ${new Date(user.created).toDateString()}`}</p>              
+                         </div>
+                         <div className="col-md-6">
+                              {
+                              isAuthenticated().user && isAuthenticated().user._id === user._id 
+                              &&
+                              (
+                                   <div className="d-inline-block mt-5">
+                                        <Link className="btn btn-raised btn-success mr-5"
+                                             to ={`/api/users/update/${user._id}`}
+                                        >
+                                             Edit
+                                        </Link>
+                                        <button className="btn btn-raised btn-danger">Delete</button>
+                                   </div>
+
+                              )
+                              }
+                              
+                         </div>
+                    </div>
                </div>
           )
      }
