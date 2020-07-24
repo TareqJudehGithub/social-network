@@ -9,8 +9,6 @@ class Profile extends Component {
           redirectToSignIn: false
      };
 
-    
-
      init = userId => {
           const token = isAuthenticated().token;
 
