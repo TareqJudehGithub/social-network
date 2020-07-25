@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom';
 import { list } from "./apiUser";
+import avatar from "../assets/images/user-avatar.jpg";
+
+
 
 class UsersList extends Component {
     state = {
@@ -20,21 +24,34 @@ class UsersList extends Component {
           const { users } = this.state;
 
           return (
-               <div className="container">
+               <div className="container text-center">
                     <h2 className="mt-5 mb-5">Users</h2>
 
                     <div className="row">
                     {  
                           users.map(user => {
-                             return (
-                              <div className="card col-md-4" key={user._id}>
-                                   <img className="card-img-top" src="" alt="user" />
-                                   <div className="card-body">
-                                   <h5 className="card-title">{user.name}</h5>
-                                   <p className="card-text">{user.email}</p>
-                                   <a href="#!" className="btn btn-primary">View Profile</a>
+                             return ( 
+                                   <div className="card-group col-md-4 
+                                        shadow p-3 mb-5 bg-white" 
+                                   key={user._id}
+                                   >
+                                        <div className="card">
+                                             <img className="card-img-top mx-auto" 
+                                                  src={avatar} alt="user avatar"
+                                                  style={{width: "50%"}}
+                                             />
+                                             <div className="card-body">
+                                                  <h5 className="card-title">{user.name}</h5>
+                                                  <p className="card-text">{user.email}</p>
+                                                  <Link className="btn btn-primary"
+                                                       to={`/users/${user._id}`}
+                                                  >
+                                                       View Profile
+                                                  </Link>
+                                             </div>
+                                        </div>
                                    </div>
-                              </div>
+                             
                              )
                          })
                     }

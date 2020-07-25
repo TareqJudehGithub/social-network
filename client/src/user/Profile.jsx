@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect, Link } from "react-router-dom";
 import { isAuthenticated } from "../auth/index";
 import { read } from "./apiUser";
+import avatar from "../assets/images/user-avatar.jpg";
 
 class Profile extends Component {
      state = {
@@ -35,16 +36,25 @@ class Profile extends Component {
           }
          
           return (
-               <div className="container m-2">
-                    <div className="row">
-                              
+               <div className="container text-center">
+                    <h2 className="mt-5 mb-5">Profile Page</h2>
+
+                    <div className="row">                  
                          <div className="col-md-6">
-                              <h2 className="mt-5 mb-5">Profile Page</h2>
-                              <p>{`Name: ${isAuthenticated().user.name}`}</p>
-                              <p>{`Email Address: ${isAuthenticated().user.email}`}</p>
-                              <p>{`Joined: ${new Date(user.created).toDateString()}`}</p>              
+                              <img className="card-img-top" 
+                                        src={avatar} alt="avatar"
+                                        style={{width: "50%"}}
+                              />
+                              <div className="lead mt-5">
+                                   <p>{`Name: ${user.name}`}</p>
+                              </div>             
                          </div>
                          <div className="col-md-6">
+                         <div className="lead">
+                              <p>{`Email Address: ${user.email}`}</p>
+                              <p>{`Joined: ${new Date(user.created).toDateString()}`}</p> 
+                         </div>  
+                              { /* Only authenticated users get to edit and delete: */}
                               {
                               isAuthenticated().user && isAuthenticated().user._id === user._id 
                               &&
@@ -59,8 +69,7 @@ class Profile extends Component {
                                    </div>
 
                               )
-                              }
-                              
+                              }                      
                          </div>
                     </div>
                </div>

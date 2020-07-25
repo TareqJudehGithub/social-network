@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, Redirect } from "react-router-dom";
 import { signUp } from "../auth/index";
 
 class Signup extends React.Component {
@@ -53,6 +54,7 @@ class Signup extends React.Component {
                               error: "",
                               open: true
                          });
+                         
                     }
                })
           }
@@ -120,6 +122,7 @@ class Signup extends React.Component {
                               }}     
                          >
                               <h6>User Signed up successfully!</h6>
+                              <h6><Link to="/signin">Sign in</Link></h6>
                          </div>
 
                     </form>
