@@ -9,7 +9,6 @@ export const read = (userId, token) => {
           }
      })
      .then(response => { 
-          console.log(response);
           return response.json() 
      })
      .catch(error => {
@@ -22,10 +21,27 @@ export const list = () => {
           method: "GET"
      })
      .then(response => {
-          console.log(`List: `, response)
           return response.json();
      })
      .catch(error => {
           console.log(error);
      });
-}
+};
+
+export const remove = (userId, token) => {
+     
+     return fetch(`${process.env.REACT_APP_API_URL}/api/users/del/${userId}`, {
+          method: "Delete", 
+          headers: {
+               Accept: "application/json",
+               "Content-Type": "application/json",
+               Authorization: `${token}`
+          }
+     })
+     .then(response => { 
+          return response.json() 
+     })
+     .catch(error => {
+          console.log(error);
+     });
+};

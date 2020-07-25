@@ -1,5 +1,5 @@
 import React from 'react';
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { signIn, authenticate } from "../auth/index";
 
 export class SignIn extends React.Component {
@@ -40,6 +40,8 @@ export class SignIn extends React.Component {
                          error: data.msg,
                          loading: false
                      });
+                    console.log(this.state.error);
+                    
                }
                else{
                     authenticate(data, () => {

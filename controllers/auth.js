@@ -50,7 +50,7 @@ const signin = async (req, res) => {
                payload,
                process.env.JWT_SECRET,
                {
-                    expiresIn: 1800,
+                    expiresIn: 900,
                     // algorithm: 'HS256',
                },
                (error, token) => {

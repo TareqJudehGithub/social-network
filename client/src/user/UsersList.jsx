@@ -32,7 +32,7 @@ class UsersList extends Component {
                           users.map(user => {
                              return ( 
                                    <div className="card-group col-md-4 
-                                        shadow p-3 mb-5 bg-white" 
+                                        shadow p-3 mb-5 bg-white rounded" 
                                    key={user._id}
                                    >
                                         <div className="card">
