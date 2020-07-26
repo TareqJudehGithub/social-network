@@ -72,8 +72,11 @@ class Profile extends Component {
                               &&
                               (
                                    <div className="d-inline-block mt-5">
-                                        <Link className="btn btn-raised btn-success mr-2"
-                                             to ={`/api/users/update/${user._id}`}
+                                        <Link 
+                                             to={`/users/update/${user._id}`}
+                                             //  to={`/users/update/${user._id}`}
+                                             className="btn btn-raised btn-primary mr-2"
+                                            
                                         >
                                              Edit
                                         </Link>

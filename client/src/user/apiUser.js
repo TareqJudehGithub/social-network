@@ -27,6 +27,22 @@ export const list = () => {
           console.log(error);
      });
 };
+export const updateUser = (userId, token, user ) => {
+     return fetch(`${process.env.REACT_APP_API_URL}/api/users/update/${userId}`,{
+          method: "PUT",
+          headers: {
+               Accept: "application/json",
+               "Content-Type": "application/json",
+               Authorization: `${token}`
+          },
+          body: JSON.stringify(user)
+     })
+     .then(response => {
+          return response.json()  //response will be in the //updateUser() in EditProfile.jsx
+     })
+     .catch(error => console.log(error))
+
+}
 
 export const remove = (userId, token) => {
      

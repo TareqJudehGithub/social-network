@@ -62,7 +62,7 @@ const updateUser = async(req, res) => {
           .findByIdAndUpdate(
                req.params.id,
                {$set: userFields},
-               {new: true},        
+               {new: true}      
           )
           res.json(user);
           console.log(chalk.blue(`User "${user.name}" information update was successful!`));
