@@ -126,8 +126,8 @@ const signup = async (req, res) => {
      try {
           // check if user already exists:
           let user = await User.findOne({ email: email });
-     if(user) {
-          return res.status(400).json({ msg: "Error! User already exists!"});
+          if(user) {
+               return res.status(400).json({ msg: "Error! User already exists!"});
      }
 
      user = new User(req.body); 
